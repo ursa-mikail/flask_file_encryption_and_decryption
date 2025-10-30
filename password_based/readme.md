@@ -76,4 +76,9 @@ pip install flask cryptography # pip install -r requirements.txt
 http://localhost:5000
 ```
 
+```
+make run
+make clean
+```
+
 
