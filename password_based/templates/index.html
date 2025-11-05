@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Encryption Tool</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>File Encryption Tool</h1>
+        <p>Encrypt and decrypt files using AES-GCM encryption with password-derived keys.</p>
+        
+        <div class="tab">
+            <button class="tablinks active" onclick="openTab(event, 'Encrypt')">Encrypt File</button>
+            <button class="tablinks" onclick="openTab(event, 'Decrypt')">Decrypt File</button>
+        </div>
+
+        <!-- Encryption Tab -->
+        <div id="Encrypt" class="tabcontent" style="display: block;">
+            <h2>Encrypt a File</h2>
+            <form id="encryptForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="file">Select file to encrypt:</label>
+                    <input type="file" id="file" name="file" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="output_name">Output filename (optional, defaults to original name + .enc):</label>
+                    <input type="text" id="output_name" name="output_name" placeholder="Leave blank for default">
+                </div>
+                <button type="submit">Encrypt File</button>
+            </form>
+            <div id="encryptResult" class="result"></div>
+        </div>
+
+        <!-- Decryption Tab -->
+        <div id="Decrypt" class="tabcontent">
+            <h2>Decrypt a File</h2>
+            
+            <!-- Method Selection -->
+            <div class="form-group">
+                <label>Decryption Method:</label>
+                <div class="radio-group">
+                    <input type="radio" id="manual" name="method" value="manual" checked onclick="toggleDecryptMethod()">
+                    <label for="manual">Manual Input</label>
+                    
+                    <input type="radio" id="metadata" name="method" value="metadata" onclick="toggleDecryptMethod()">
+                    <label for="metadata">Use Metadata File</label>
+                </div>
+            </div>
+
+            <!-- Manual Decryption Form -->
+            <form id="decryptManualForm" enctype="multipart/form-data">
+                <input type="hidden" name="use_metadata" value="false">
+                <div class="form-group">
+                    <label for="encrypted_file_manual">Select encrypted file:</label>
+                    <input type="file" id="encrypted_file_manual" name="encrypted_file" required>
+                </div>
+                <div class="form-group">
+                    <label for="decrypt_password">Password:</label>
+                    <input type="password" id="decrypt_password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="salt">Salt (Base64, if known):</label>
+                    <input type="text" id="salt" name="salt" placeholder="Optional - from metadata file">
+                </div>
+                <div class="form-group">
+                    <label for="decrypt_output_name">Output filename (optional):</label>
+                    <input type="text" id="decrypt_output_name" name="output_name" placeholder="Leave blank for default">
+                </div>
+                <button type="submit">Decrypt File</button>
+            </form>
+
+            <!-- Metadata Decryption Form -->
+            <form id="decryptMetaForm" enctype="multipart/form-data" style="display: none;">
+                <input type="hidden" name="use_metadata" value="true">
+                <div class="form-group">
+                    <label for="encrypted_file_meta">Select encrypted file:</label>
+                    <input type="file" id="encrypted_file_meta" name="encrypted_file" required>
+                </div>
+                <div class="form-group">
+                    <label for="meta_file">Select metadata file (.meta):</label>
+                    <input type="file" id="meta_file" name="meta_file" accept=".meta" required>
+                </div>
+                <div class="form-group">
+                    <label for="meta_output_name">Output filename (optional):</label>
+                    <input type="text" id="meta_output_name" name="output_name" placeholder="Leave blank for default">
+                </div>
+                <button type="submit">Decrypt File with Metadata</button>
+            </form>
+
+            <div id="decryptResult" class="result"></div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
